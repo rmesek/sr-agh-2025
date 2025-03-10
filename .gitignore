@@ -242,4 +242,5 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/java,python,windows,linux
 
 # Visual Studio Code
-.vscode
+.vscode/*
+!.vscode/settings.json
