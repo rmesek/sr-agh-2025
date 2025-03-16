@@ -1,3 +1,4 @@
 {
-    "terminal.integrated.cwd": "${fileDirname}"
+    "terminal.integrated.cwd": "${fileDirname}",
+    "python.analysis.typeCheckingMode": "standard"
 }
