@@ -7,11 +7,30 @@ type RetAddress = socket._RetAddress
 
 HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT = 12345  # Port to listen on (non-privileged ports are > 1023)
-BUFF_SIZE = 64
+BUFF_SIZE = 1024
+UDP_BUFF_SIZE = 1024
 MESSAGE_DELIMITER = b"\0"
 
 clients: dict[Socket, str] = {}
 clients_lock = threading.Lock()
+
+
+def _check_mtu_warning(bytes_send: int) -> bool:
+    """Check if the message size exceeds the MTU warning threshold."""
+    mtu_limit = 1500
+    if bytes_send > mtu_limit:
+        print(f"Warning: Message exceeds MTU limit ({bytes_send} > {mtu_limit})!")
+        return True
+    return False
+
+
+def _check_buffer_size_warning(bytes_send: int) -> bool:
+    """Check if the message size exceeds the buffer size warning threshold."""
+    buffer_limit = UDP_BUFF_SIZE
+    if bytes_send > buffer_limit:
+        print(f"Warning: Message exceeds buffer limit ({bytes_send} > {buffer_limit})!")
+        return True
+    return False
 
 
 def send_message(socket: Socket, message: str):
@@ -80,6 +99,46 @@ def client_thread(client_socket: Socket, address: RetAddress):
         print(f"Client {address} disconnected.")
 
 
+def _get_client_nickname(address) -> str:
+    with clients_lock:
+        for client_socket, nickname in clients.items():
+            if client_socket.getpeername() == address:
+                return nickname
+    return "Unknown"
+
+
+def udp_listener(udp_socket: Socket):
+    """Thread function to listen for UDP messages."""
+    while True:
+        try:
+            buff, address = udp_socket.recvfrom(UDP_BUFF_SIZE)
+            nickname = _get_client_nickname(address)
+            message = f"[UDP{address}]{nickname}: {buff.decode()}"
+            print(message)
+            # Broadcast the UDP message to all connected clients
+            udp_broadcast(udp_socket, address, message)
+        except Exception as e:
+            print(f"Error receiving UDP message: {e}")
+            break
+    udp_socket.close()
+    print("UDP listener closed.")
+
+
+def udp_broadcast(udp_socket: Socket, address: RetAddress, message: str):
+    """Broadcast a message to all connected clients using UDP."""
+    with clients_lock:
+        for client_socket, nickname in clients.items():
+            if client_socket.getpeername() != address:
+                try:
+                    bytes_send = udp_socket.sendto(
+                        message.encode(), client_socket.getpeername()
+                    )
+                    _check_mtu_warning(bytes_send)
+                    _check_buffer_size_warning(bytes_send)
+                except Exception as e:
+                    print(f"Error sending UDP message to {nickname}: {e}")
+
+
 def main():
     # Create a TCP socket
     tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -87,6 +146,13 @@ def main():
     tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     tcp_socket.bind((HOST, PORT))
     tcp_socket.listen()
+
+    # Create a UDP socket
+    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udp_socket.bind((HOST, PORT))
+    udp_thread = threading.Thread(target=udp_listener, args=(udp_socket,))
+    udp_thread.start()
+
     print(f"Server listening on {HOST}:{PORT}")
 
     # Accept incoming TCP connections
