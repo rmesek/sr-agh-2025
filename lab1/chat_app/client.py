@@ -1,5 +1,6 @@
 import socket
 import threading
+import struct
 
 # Type definitions
 type Socket = socket.socket
@@ -8,6 +9,7 @@ type RetAddress = socket._RetAddress
 BUFF_SIZE = 1024
 UDP_BUFF_SIZE = 1024
 MESSAGE_DELIMITER = b"\0"
+MCAST_GROUP = "224.1.1.1"
 
 
 def _check_mtu_warning(bytes_send: int) -> bool:
@@ -75,6 +77,19 @@ def udp_listener(udp_socket: Socket):
     print("UDP listener closed.")
 
 
+def multicast_listener(mcast_socket: Socket):
+    """Thread function to listen for Multicast messages."""
+    while True:
+        try:
+            buff, address = mcast_socket.recvfrom(UDP_BUFF_SIZE)
+            print(f"[MCAST{address}]{buff.decode()}")
+        except Exception as e:
+            print(f"Error receiving Multicast message: {e}")
+            break
+    mcast_socket.close()
+    print("Multicast listener closed.")
+
+
 def main():
     prompt_string = "Enter server address (e.g. 127.0.0.1:12345): "
     host, port = input(prompt_string).strip().split(":")
@@ -104,6 +119,22 @@ def main():
     udp_listener_thread = threading.Thread(target=udp_listener, args=(udp_socket,))
     udp_listener_thread.start()
 
+    # Create a UDP socket for Multicast
+    mcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    mcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    mcast_socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
+    # mcast_socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_LOOP, 0)
+    mcast_socket.bind((MCAST_GROUP, port))
+    mreq = struct.pack("4sl", socket.inet_aton(MCAST_GROUP), socket.INADDR_ANY)
+    mcast_socket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+    print(f"Connected to Multicast at {MCAST_GROUP}:{port}")
+
+    # Start a thread to listen for Multicast messages
+    multicast_listener_thread = threading.Thread(
+        target=multicast_listener, args=(mcast_socket,)
+    )
+    multicast_listener_thread.start()
+
     # Send messages to the server
     while True:
         message = input()
@@ -116,7 +147,10 @@ def main():
         elif message.startswith("M "):
             # Send multicast message
             message = message[2:]
-            # TODO: Implement multicast sending
+            message = f"{nickname}: {message}"
+            bytes_send = mcast_socket.sendto(message.encode(), (MCAST_GROUP, port))
+            _check_mtu_warning(bytes_send)
+            _check_buffer_size_warning(bytes_send)
         else:
             try:
                 send_message(tcp_socket, message)
