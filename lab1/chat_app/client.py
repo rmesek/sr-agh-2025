@@ -124,7 +124,11 @@ def main():
     mcast_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     mcast_socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
     # mcast_socket.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_LOOP, 0)
-    mcast_socket.bind((MCAST_GROUP, port))
+    try:
+        mcast_socket.bind((MCAST_GROUP, port))
+    except OSError as e:
+        print(f"Error binding to Multicast group: {e}")
+        mcast_socket.bind(("", port))
     mreq = struct.pack("4sl", socket.inet_aton(MCAST_GROUP), socket.INADDR_ANY)
     mcast_socket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
     print(f"Connected to Multicast at {MCAST_GROUP}:{port}")
