@@ -17,7 +17,7 @@ clients_lock = threading.Lock()
 
 def _check_mtu_warning(bytes_send: int) -> bool:
     """Check if the message size exceeds the MTU warning threshold."""
-    mtu_limit = 1500
+    mtu_limit = 1472
     if bytes_send > mtu_limit:
         print(f"Warning: Message exceeds MTU limit ({bytes_send} > {mtu_limit})!")
         return True
