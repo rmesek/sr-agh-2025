@@ -4,8 +4,8 @@ from typing import List, Optional, Tuple
 
 import aiohttp
 import feedparser
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import FastAPI, HTTPException, Request, status, Security, Depends
+from fastapi.security import OAuth2PasswordBearer, APIKeyHeader
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -22,6 +22,19 @@ templates = Jinja2Templates(directory="templates")
 
 # OAuth2 scheme for security
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+# Security configuration
+API_KEY = "api-key-example"
+api_key_header = APIKeyHeader(name="X-API-Key")
+
+
+async def get_api_key(api_key: str = Security(api_key_header)):
+    if api_key != API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid API Key",
+        )
+    return api_key
 
 
 class Paper(BaseModel):
@@ -141,7 +154,7 @@ async def get_home():
 
 
 @app.get("/api/{word}")
-async def get_paper_by_word(word: str):
+async def get_paper_by_word(word: str, api_key: str = Depends(get_api_key)):
     """
     Fetch random papers based on the provided word.
     """
