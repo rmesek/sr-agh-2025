@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Paper: {{ paper.title }}</title>
+  </head>
+  <body>
+    <h1>{{ paper.title }}</h1>
+    <h2>Authors:</h2>
+    <ul>
+      {% for author in paper.authors %}
+      <li>{{ author }}</li>
+      {% endfor %}
+    </ul>
+    <h2>Published:</h2>
+    <p>{{ paper.published }}</p>
+    <h2>Summary:</h2>
+    <p>{{ paper.summary }}</p>
+    <h2>Links:</h2>
+    <p><a href="{{ paper.link }}" target="_blank">View on arXiv</a></p>
+    {% if paper.pdf %}
+    <p><a href="{{ paper.pdf }}" target="_blank">Download PDF</a></p>
+    {% endif %}
+    <hr />
+    <p><a href="/">Back to Search</a></p>
+  </body>
+</html>
