@@ -7,7 +7,6 @@ import feedparser
 from fastapi import FastAPI, HTTPException, Request, status, Security, Depends
 from fastapi.security import OAuth2PasswordBearer, APIKeyHeader
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
@@ -17,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # OAuth2 scheme for security
