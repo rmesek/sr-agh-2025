@@ -1,0 +1,5 @@
+calcServant1(calc11), calcServant2(calc22)
+2
+calc11
+communicator.stringToProxy("calc/calc11:tcp -h 127.0.0.2 -p 10000 -z : udp -h 127.0.0.2 -p 10000 -z");
+com.zeroc.Ice.ObjectNotExistException

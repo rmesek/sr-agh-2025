@@ -31,7 +31,7 @@ public class IceClient {
 			//CalcPrx obj1 = CalcPrx.uncheckedCast(base1); //na czym polega różnica?
 			if (obj1 == null) throw new Error("Invalid proxy");
 
-			// Zadanie 10. Strategia: wiele obiektów, wspólny serwant.
+			// Zadanie 11. Strategia: wiele obiektów, każdy z dedykowanym serwantem
 			ObjectPrx base2 = communicator.stringToProxy("calc/calc33:tcp -h 127.0.0.2 -p 10000 -z : udp -h 127.0.0.2 -p 10000 -z");
 			CalcPrx obj2 = CalcPrx.checkedCast(base2);
 			if (obj2 == null) throw new Error("Invalid proxy");
