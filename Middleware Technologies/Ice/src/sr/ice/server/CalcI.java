@@ -12,6 +12,11 @@ public class CalcI implements Calc {
 	public long add(int a, int b, Current __current) {
 		System.out.println("ADD: a = " + a + ", b = " + b + ", result = " + (a + b));
 
+        // Zadanie 10.
+        // Sprawdź, czy, serwant może wiedzieć, na rzecz jakiego obiektu realizuje konkretne wywołanie
+        // (podpowiedź: __current.id);
+        System.out.println("Current ID: " + __current.id);
+
 		if (a > 1000 || b > 1000) {
 			try {
 				Thread.sleep(6000);
@@ -29,7 +34,7 @@ public class CalcI implements Calc {
 
 	@Override
 	public long subtract(int a, int b, Current __current) {
-		return 0;
+		return a - b;
 	}
 
 

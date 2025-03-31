@@ -31,6 +31,11 @@ public class IceClient {
 			//CalcPrx obj1 = CalcPrx.uncheckedCast(base1); //na czym polega różnica?
 			if (obj1 == null) throw new Error("Invalid proxy");
 
+			// Zadanie 10. Strategia: wiele obiektów, wspólny serwant.
+			ObjectPrx base2 = communicator.stringToProxy("calc/calc33:tcp -h 127.0.0.2 -p 10000 -z : udp -h 127.0.0.2 -p 10000 -z");
+			CalcPrx obj2 = CalcPrx.checkedCast(base2);
+			if (obj2 == null) throw new Error("Invalid proxy");
+
 			CompletableFuture<Long> cfl = null;
 			String line = null;
 			java.io.BufferedReader in = new java.io.BufferedReader(new java.io.InputStreamReader(System.in));
@@ -45,6 +50,14 @@ public class IceClient {
 					switch (line) {
 						case "add":
 							r = obj1.add(7, 8);
+							System.out.println("RESULT = " + r);
+							break;
+						case "add-obj1":
+							r = obj1.add(7, 8);
+							System.out.println("RESULT = " + r);
+							break;
+						case "add-obj2":
+							r = obj2.add(7, 8);
 							System.out.println("RESULT = " + r);
 							break;
 						case "add2":
