@@ -1,7 +1,0 @@
-https://developers.pandadoc.com/?ref=public_apis&utm_medium=website
-https://sv443.net/jokeapi/v2/
-https://gofile.io/api
-https://archive.readme.io/reference/getting-started
-https://info.arxiv.org/help/api/index.html?ref=public_apis&utm_medium=website
-https://rawg.io/apidocs?ref=public_apis&utm_medium=website
-https://www.datamuse.com/api/
