@@ -59,7 +59,7 @@ public interface Calc extends com.zeroc.Ice.Object
     **/
     static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_add(Calc obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
     {
-        com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
+        com.zeroc.Ice.Object._iceCheckMode(com.zeroc.Ice.OperationMode.Idempotent, current.mode);
         com.zeroc.Ice.InputStream istr = inS.startReadParams();
         int iceP_a;
         int iceP_b;
@@ -82,7 +82,7 @@ public interface Calc extends com.zeroc.Ice.Object
     **/
     static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_subtract(Calc obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
     {
-        com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
+        com.zeroc.Ice.Object._iceCheckMode(com.zeroc.Ice.OperationMode.Idempotent, current.mode);
         com.zeroc.Ice.InputStream istr = inS.startReadParams();
         int iceP_a;
         int iceP_b;
@@ -127,7 +127,7 @@ public interface Calc extends com.zeroc.Ice.Object
     static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_avg(Calc obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
         throws com.zeroc.Ice.UserException
     {
-        com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
+        com.zeroc.Ice.Object._iceCheckMode(com.zeroc.Ice.OperationMode.Idempotent, current.mode);
         com.zeroc.Ice.InputStream istr = inS.startReadParams();
         long[] iceP_a;
         iceP_a = istr.readLongSeq();

@@ -22,10 +22,10 @@ module Demo
 
   interface Calc
   {
-    long add(int a, int b);
-    long subtract(int a, int b);
+    idempotent long add(int a, int b); // Zadanie 15.
+    idempotent long subtract(int a, int b); // Zadanie 15.
     void op(A a1, short b1); //załóżmy, że to też jest operacja arytmetyczna ;)
-    long avg(longList a) throws NoInput; // Zadanie 14.
+    idempotent long avg(longList a) throws NoInput; // Zadanie 14., 15.
   };
 
 };

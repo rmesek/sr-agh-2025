@@ -47,7 +47,7 @@ public interface CalcPrx extends com.zeroc.Ice.ObjectPrx
      **/
     default com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> _iceI_addAsync(int iceP_a, int iceP_b, java.util.Map<String, String> context, boolean sync)
     {
-        com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "add", null, sync, null);
+        com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "add", com.zeroc.Ice.OperationMode.Idempotent, sync, null);
         f.invoke(true, context, null, ostr -> {
                      ostr.writeInt(iceP_a);
                      ostr.writeInt(iceP_b);
@@ -89,7 +89,7 @@ public interface CalcPrx extends com.zeroc.Ice.ObjectPrx
      **/
     default com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> _iceI_subtractAsync(int iceP_a, int iceP_b, java.util.Map<String, String> context, boolean sync)
     {
-        com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "subtract", null, sync, null);
+        com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "subtract", com.zeroc.Ice.OperationMode.Idempotent, sync, null);
         f.invoke(true, context, null, ostr -> {
                      ostr.writeInt(iceP_a);
                      ostr.writeInt(iceP_b);
@@ -181,7 +181,7 @@ public interface CalcPrx extends com.zeroc.Ice.ObjectPrx
      **/
     default com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> _iceI_avgAsync(long[] iceP_a, java.util.Map<String, String> context, boolean sync)
     {
-        com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "avg", null, sync, _iceE_avg);
+        com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "avg", com.zeroc.Ice.OperationMode.Idempotent, sync, _iceE_avg);
         f.invoke(true, context, null, ostr -> {
                      ostr.writeLongSeq(iceP_a);
                  }, istr -> {
