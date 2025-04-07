@@ -19,11 +19,24 @@ public class NoInput extends com.zeroc.Ice.UserException
 {
     public NoInput()
     {
+        this.reason = "";
     }
 
     public NoInput(Throwable cause)
     {
         super(cause);
+        this.reason = "";
+    }
+
+    public NoInput(String reason)
+    {
+        this.reason = reason;
+    }
+
+    public NoInput(String reason, Throwable cause)
+    {
+        super(cause);
+        this.reason = reason;
     }
 
     public String ice_id()
@@ -31,11 +44,14 @@ public class NoInput extends com.zeroc.Ice.UserException
         return "::Demo::NoInput";
     }
 
+    public String reason;
+
     /** @hidden */
     @Override
     protected void _writeImpl(com.zeroc.Ice.OutputStream ostr_)
     {
         ostr_.startSlice("::Demo::NoInput", -1, true);
+        ostr_.writeString(reason);
         ostr_.endSlice();
     }
 
@@ -44,9 +60,10 @@ public class NoInput extends com.zeroc.Ice.UserException
     protected void _readImpl(com.zeroc.Ice.InputStream istr_)
     {
         istr_.startSlice();
+        reason = istr_.readString();
         istr_.endSlice();
     }
 
     /** @hidden */
-    public static final long serialVersionUID = 1706896051L;
+    public static final long serialVersionUID = -1735376484L;
 }

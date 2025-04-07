@@ -23,6 +23,9 @@ public interface Calc extends com.zeroc.Ice.Object
 
     void op(A a1, short b1, com.zeroc.Ice.Current current);
 
+    long avg(long[] a, com.zeroc.Ice.Current current)
+        throws NoInput;
+
     /** @hidden */
     static final String[] _iceIds =
     {
@@ -113,10 +116,34 @@ public interface Calc extends com.zeroc.Ice.Object
         return inS.setResult(inS.writeEmptyParams());
     }
 
+    /**
+     * @hidden
+     * @param obj -
+     * @param inS -
+     * @param current -
+     * @return -
+     * @throws com.zeroc.Ice.UserException -
+    **/
+    static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_avg(Calc obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
+        throws com.zeroc.Ice.UserException
+    {
+        com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
+        com.zeroc.Ice.InputStream istr = inS.startReadParams();
+        long[] iceP_a;
+        iceP_a = istr.readLongSeq();
+        inS.endReadParams();
+        long ret = obj.avg(iceP_a, current);
+        com.zeroc.Ice.OutputStream ostr = inS.startWriteParams();
+        ostr.writeLong(ret);
+        inS.endWriteParams(ostr);
+        return inS.setResult(ostr);
+    }
+
     /** @hidden */
     final static String[] _iceOps =
     {
         "add",
+        "avg",
         "ice_id",
         "ice_ids",
         "ice_isA",
@@ -144,25 +171,29 @@ public interface Calc extends com.zeroc.Ice.Object
             }
             case 1:
             {
-                return com.zeroc.Ice.Object._iceD_ice_id(this, in, current);
+                return _iceD_avg(this, in, current);
             }
             case 2:
             {
-                return com.zeroc.Ice.Object._iceD_ice_ids(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_id(this, in, current);
             }
             case 3:
             {
-                return com.zeroc.Ice.Object._iceD_ice_isA(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_ids(this, in, current);
             }
             case 4:
             {
-                return com.zeroc.Ice.Object._iceD_ice_ping(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_isA(this, in, current);
             }
             case 5:
             {
-                return _iceD_op(this, in, current);
+                return com.zeroc.Ice.Object._iceD_ice_ping(this, in, current);
             }
             case 6:
+            {
+                return _iceD_op(this, in, current);
+            }
+            case 7:
             {
                 return _iceD_subtract(this, in, current);
             }

@@ -139,6 +139,65 @@ public interface CalcPrx extends com.zeroc.Ice.ObjectPrx
         return f;
     }
 
+    default long avg(long[] a)
+        throws NoInput
+    {
+        return avg(a, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+    }
+
+    default long avg(long[] a, java.util.Map<String, String> context)
+        throws NoInput
+    {
+        try
+        {
+            return _iceI_avgAsync(a, context, true).waitForResponseOrUserEx();
+        }
+        catch(NoInput ex)
+        {
+            throw ex;
+        }
+        catch(com.zeroc.Ice.UserException ex)
+        {
+            throw new com.zeroc.Ice.UnknownUserException(ex.ice_id(), ex);
+        }
+    }
+
+    default java.util.concurrent.CompletableFuture<java.lang.Long> avgAsync(long[] a)
+    {
+        return _iceI_avgAsync(a, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+    }
+
+    default java.util.concurrent.CompletableFuture<java.lang.Long> avgAsync(long[] a, java.util.Map<String, String> context)
+    {
+        return _iceI_avgAsync(a, context, false);
+    }
+
+    /**
+     * @hidden
+     * @param iceP_a -
+     * @param context -
+     * @param sync -
+     * @return -
+     **/
+    default com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> _iceI_avgAsync(long[] iceP_a, java.util.Map<String, String> context, boolean sync)
+    {
+        com.zeroc.IceInternal.OutgoingAsync<java.lang.Long> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "avg", null, sync, _iceE_avg);
+        f.invoke(true, context, null, ostr -> {
+                     ostr.writeLongSeq(iceP_a);
+                 }, istr -> {
+                     long ret;
+                     ret = istr.readLong();
+                     return ret;
+                 });
+        return f;
+    }
+
+    /** @hidden */
+    static final Class<?>[] _iceE_avg =
+    {
+        NoInput.class
+    };
+
     /**
      * Contacts the remote server to verify that the object implements this type.
      * Raises a local exception if a communication error occurs.
