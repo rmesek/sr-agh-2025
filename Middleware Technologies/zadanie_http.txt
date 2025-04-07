@@ -1,0 +1,62 @@
+#################
+### Zadanie 4 ###
+#################
+
+Extension: application_layer_protocol_negotiation (len=14)
+    Type: application_layer_protocol_negotiation (16)
+    Length: 14
+    ALPN Extension Length: 12
+    ALPN Protocol
+        ALPN string length: 2
+        ALPN Next Protocol: h2
+        ALPN string length: 8
+        ALPN Next Protocol: http/1.1
+
+#################
+### Zadanie 5 ###
+#################
+
+Extension: application_layer_protocol_negotiation (len=5)
+    Type: application_layer_protocol_negotiation (16)
+    Length: 5
+    ALPN Extension Length: 3
+    ALPN Protocol
+        ALPN string length: 2
+        ALPN Next Protocol: h2
+
+HyperText Transfer Protocol 2
+    Stream: HEADERS, Stream ID: 1, Length 546, GET /
+        Length: 546
+        Type: HEADERS (1)
+        Flags: 0x25, Priority, End Headers, End Stream
+        0... .... .... .... .... .... .... .... = Reserved: 0x0
+        .000 0000 0000 0000 0000 0000 0000 0001 = Stream Identifier: 1
+        [Pad Length: 0]
+        1... .... .... .... .... .... .... .... = Exclusive: True
+        .000 0000 0000 0000 0000 0000 0000 0000 = Stream Dependency: 0
+        Weight: 255
+        [Weight real: 256]
+        Header Block Fragment […]: 824194f1e3c2e6aa53d948d3eba8d71cd3ae592d5eba3f87844092b6b9ac1c8558d520a4b6c2ad617b5a54251f01317ad5d07f66a281b0dae053fae46aa43f8429a77a8102e0fb5391aa71afb53cb8d7f6a435d74179163cc64b0db2eaecb8a7f59b1efd19fe94a0dd
+        [Header Length: 897]
+        [Header Count: 19]
+        Header: :method: GET
+        Header: :authority: www.informatyka.agh.edu.pl
+        Header: :scheme: https
+        Header: :path: /
+        Header: upgrade-insecure-requests: 1
+        Header: user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+        Header: accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+        Header: sec-fetch-site: none
+        Header: sec-fetch-mode: navigate
+        Header: sec-fetch-user: ?1
+        Header: sec-fetch-dest: document
+        Header: sec-ch-ua: "Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"
+        Header: sec-ch-ua-mobile: ?0
+        Header: sec-ch-ua-platform: "Windows"
+        Header: accept-encoding: gzip, deflate, br, zstd
+        Header: accept-language: pl-PL,pl;q=0.9,en-US;q=0.8,en;q=0.7
+        Header: cookie: _ga=GA1.1.318898963.1743706781
+        Header: cookie: _ga_GLX6CW7DF7=GS1.1.1743706781.1.1.1743707086.0.0.0
+        Header: priority: u=0, i
+        [Full request URI: https://www.informatyka.agh.edu.pl/]
+        [Response in frame: 29]
