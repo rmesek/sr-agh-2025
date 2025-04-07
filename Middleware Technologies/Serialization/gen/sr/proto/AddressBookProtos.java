@@ -88,6 +88,44 @@ public final class AddressBookProtos {
      */
     sr.proto.AddressBookProtos.Person.PhoneNumberOrBuilder getPhonesOrBuilder(
         int index);
+
+    /**
+     * <pre>
+     * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+     * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+     * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+     * sekwencji.
+     * </pre>
+     *
+     * <code>repeated double IncomeHistory = 6;</code>
+     * @return A list containing the incomeHistory.
+     */
+    java.util.List<java.lang.Double> getIncomeHistoryList();
+    /**
+     * <pre>
+     * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+     * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+     * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+     * sekwencji.
+     * </pre>
+     *
+     * <code>repeated double IncomeHistory = 6;</code>
+     * @return The count of incomeHistory.
+     */
+    int getIncomeHistoryCount();
+    /**
+     * <pre>
+     * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+     * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+     * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+     * sekwencji.
+     * </pre>
+     *
+     * <code>repeated double IncomeHistory = 6;</code>
+     * @param index The index of the element to return.
+     * @return The incomeHistory at the given index.
+     */
+    double getIncomeHistory(int index);
   }
   /**
    * Protobuf type {@code tutorial.Person}
@@ -114,6 +152,7 @@ public final class AddressBookProtos {
       name_ = "";
       email_ = "";
       phones_ = java.util.Collections.emptyList();
+      incomeHistory_ = emptyDoubleList();
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor
@@ -1011,6 +1050,57 @@ public final class AddressBookProtos {
       return phones_.get(index);
     }
 
+    public static final int INCOMEHISTORY_FIELD_NUMBER = 6;
+    @SuppressWarnings("serial")
+    private com.google.protobuf.Internal.DoubleList incomeHistory_ =
+        emptyDoubleList();
+    /**
+     * <pre>
+     * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+     * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+     * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+     * sekwencji.
+     * </pre>
+     *
+     * <code>repeated double IncomeHistory = 6;</code>
+     * @return A list containing the incomeHistory.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Double>
+        getIncomeHistoryList() {
+      return incomeHistory_;
+    }
+    /**
+     * <pre>
+     * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+     * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+     * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+     * sekwencji.
+     * </pre>
+     *
+     * <code>repeated double IncomeHistory = 6;</code>
+     * @return The count of incomeHistory.
+     */
+    public int getIncomeHistoryCount() {
+      return incomeHistory_.size();
+    }
+    /**
+     * <pre>
+     * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+     * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+     * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+     * sekwencji.
+     * </pre>
+     *
+     * <code>repeated double IncomeHistory = 6;</code>
+     * @param index The index of the element to return.
+     * @return The incomeHistory at the given index.
+     */
+    public double getIncomeHistory(int index) {
+      return incomeHistory_.getDouble(index);
+    }
+    private int incomeHistoryMemoizedSerializedSize = -1;
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1025,6 +1115,7 @@ public final class AddressBookProtos {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (!com.google.protobuf.GeneratedMessage.isStringEmpty(name_)) {
         com.google.protobuf.GeneratedMessage.writeString(output, 1, name_);
       }
@@ -1039,6 +1130,13 @@ public final class AddressBookProtos {
       }
       for (int i = 0; i < phones_.size(); i++) {
         output.writeMessage(5, phones_.get(i));
+      }
+      if (getIncomeHistoryList().size() > 0) {
+        output.writeUInt32NoTag(50);
+        output.writeUInt32NoTag(incomeHistoryMemoizedSerializedSize);
+      }
+      for (int i = 0; i < incomeHistory_.size(); i++) {
+        output.writeDoubleNoTag(incomeHistory_.getDouble(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -1067,6 +1165,17 @@ public final class AddressBookProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, phones_.get(i));
       }
+      {
+        int dataSize = 0;
+        dataSize = 8 * getIncomeHistoryList().size();
+        size += dataSize;
+        if (!getIncomeHistoryList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        incomeHistoryMemoizedSerializedSize = dataSize;
+      }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1093,6 +1202,8 @@ public final class AddressBookProtos {
               other.getIncomePercentage())) return false;
       if (!getPhonesList()
           .equals(other.getPhonesList())) return false;
+      if (!getIncomeHistoryList()
+          .equals(other.getIncomeHistoryList())) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -1116,6 +1227,10 @@ public final class AddressBookProtos {
       if (getPhonesCount() > 0) {
         hash = (37 * hash) + PHONES_FIELD_NUMBER;
         hash = (53 * hash) + getPhonesList().hashCode();
+      }
+      if (getIncomeHistoryCount() > 0) {
+        hash = (37 * hash) + INCOMEHISTORY_FIELD_NUMBER;
+        hash = (53 * hash) + getIncomeHistoryList().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -1259,6 +1374,7 @@ public final class AddressBookProtos {
           phonesBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000010);
+        incomeHistory_ = emptyDoubleList();
         return this;
       }
 
@@ -1317,6 +1433,10 @@ public final class AddressBookProtos {
         if (((from_bitField0_ & 0x00000008) != 0)) {
           result.incomePercentage_ = incomePercentage_;
         }
+        if (((from_bitField0_ & 0x00000020) != 0)) {
+          incomeHistory_.makeImmutable();
+          result.incomeHistory_ = incomeHistory_;
+        }
       }
 
       @java.lang.Override
@@ -1372,6 +1492,17 @@ public final class AddressBookProtos {
               phonesBuilder_.addAllMessages(other.phones_);
             }
           }
+        }
+        if (!other.incomeHistory_.isEmpty()) {
+          if (incomeHistory_.isEmpty()) {
+            incomeHistory_ = other.incomeHistory_;
+            incomeHistory_.makeImmutable();
+            bitField0_ |= 0x00000020;
+          } else {
+            ensureIncomeHistoryIsMutable();
+            incomeHistory_.addAll(other.incomeHistory_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -1432,6 +1563,23 @@ public final class AddressBookProtos {
                 }
                 break;
               } // case 42
+              case 49: {
+                double v = input.readDouble();
+                ensureIncomeHistoryIsMutable();
+                incomeHistory_.addDouble(v);
+                break;
+              } // case 49
+              case 50: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                int alloc = length > 4096 ? 4096 : length;
+                ensureIncomeHistoryIsMutable(alloc / 8);
+                while (input.getBytesUntilLimit() > 0) {
+                  incomeHistory_.addDouble(input.readDouble());
+                }
+                input.popLimit(limit);
+                break;
+              } // case 50
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -1895,6 +2043,145 @@ public final class AddressBookProtos {
           phones_ = null;
         }
         return phonesBuilder_;
+      }
+
+      private com.google.protobuf.Internal.DoubleList incomeHistory_ = emptyDoubleList();
+      private void ensureIncomeHistoryIsMutable() {
+        if (!incomeHistory_.isModifiable()) {
+          incomeHistory_ = makeMutableCopy(incomeHistory_);
+        }
+        bitField0_ |= 0x00000020;
+      }
+      private void ensureIncomeHistoryIsMutable(int capacity) {
+        if (!incomeHistory_.isModifiable()) {
+          incomeHistory_ = makeMutableCopy(incomeHistory_, capacity);
+        }
+        bitField0_ |= 0x00000020;
+      }
+      /**
+       * <pre>
+       * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+       * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+       * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+       * sekwencji.
+       * </pre>
+       *
+       * <code>repeated double IncomeHistory = 6;</code>
+       * @return A list containing the incomeHistory.
+       */
+      public java.util.List<java.lang.Double>
+          getIncomeHistoryList() {
+        incomeHistory_.makeImmutable();
+        return incomeHistory_;
+      }
+      /**
+       * <pre>
+       * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+       * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+       * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+       * sekwencji.
+       * </pre>
+       *
+       * <code>repeated double IncomeHistory = 6;</code>
+       * @return The count of incomeHistory.
+       */
+      public int getIncomeHistoryCount() {
+        return incomeHistory_.size();
+      }
+      /**
+       * <pre>
+       * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+       * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+       * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+       * sekwencji.
+       * </pre>
+       *
+       * <code>repeated double IncomeHistory = 6;</code>
+       * @param index The index of the element to return.
+       * @return The incomeHistory at the given index.
+       */
+      public double getIncomeHistory(int index) {
+        return incomeHistory_.getDouble(index);
+      }
+      /**
+       * <pre>
+       * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+       * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+       * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+       * sekwencji.
+       * </pre>
+       *
+       * <code>repeated double IncomeHistory = 6;</code>
+       * @param index The index to set the value at.
+       * @param value The incomeHistory to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIncomeHistory(
+          int index, double value) {
+
+        ensureIncomeHistoryIsMutable();
+        incomeHistory_.setDouble(index, value);
+        bitField0_ |= 0x00000020;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+       * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+       * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+       * sekwencji.
+       * </pre>
+       *
+       * <code>repeated double IncomeHistory = 6;</code>
+       * @param value The incomeHistory to add.
+       * @return This builder for chaining.
+       */
+      public Builder addIncomeHistory(double value) {
+
+        ensureIncomeHistoryIsMutable();
+        incomeHistory_.addDouble(value);
+        bitField0_ |= 0x00000020;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+       * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+       * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+       * sekwencji.
+       * </pre>
+       *
+       * <code>repeated double IncomeHistory = 6;</code>
+       * @param values The incomeHistory to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllIncomeHistory(
+          java.lang.Iterable<? extends java.lang.Double> values) {
+        ensureIncomeHistoryIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, incomeHistory_);
+        bitField0_ |= 0x00000020;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+       * (oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+       * Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+       * sekwencji.
+       * </pre>
+       *
+       * <code>repeated double IncomeHistory = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIncomeHistory() {
+        incomeHistory_ = emptyDoubleList();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        onChanged();
+        return this;
       }
 
       // @@protoc_insertion_point(builder_scope:tutorial.Person)
@@ -2712,15 +2999,16 @@ public final class AddressBookProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014person.proto\022\010tutorial\"\357\001\n\006Person\022\014\n\004n" +
+      "\n\014person.proto\022\010tutorial\"\206\002\n\006Person\022\014\n\004n" +
       "ame\030\001 \001(\t\022\n\n\002id\030\002 \001(\005\022\r\n\005email\030\003 \001(\t\022\030\n\020" +
       "incomePercentage\030\004 \001(\001\022,\n\006phones\030\005 \003(\0132\034" +
-      ".tutorial.Person.PhoneNumber\032G\n\013PhoneNum" +
-      "ber\022\016\n\006number\030\001 \001(\t\022(\n\004type\030\002 \001(\0162\032.tuto" +
-      "rial.Person.PhoneType\"+\n\tPhoneType\022\n\n\006MO" +
-      "BILE\020\000\022\010\n\004HOME\020\001\022\010\n\004WORK\020\002\"/\n\013AddressBoo" +
-      "k\022 \n\006people\030\001 \003(\0132\020.tutorial.PersonB\035\n\010s" +
-      "r.protoB\021AddressBookProtosb\006proto3"
+      ".tutorial.Person.PhoneNumber\022\025\n\rIncomeHi" +
+      "story\030\006 \003(\001\032G\n\013PhoneNumber\022\016\n\006number\030\001 \001" +
+      "(\t\022(\n\004type\030\002 \001(\0162\032.tutorial.Person.Phone" +
+      "Type\"+\n\tPhoneType\022\n\n\006MOBILE\020\000\022\010\n\004HOME\020\001\022" +
+      "\010\n\004WORK\020\002\"/\n\013AddressBook\022 \n\006people\030\001 \003(\013" +
+      "2\020.tutorial.PersonB\035\n\010sr.protoB\021AddressB" +
+      "ookProtosb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -2731,7 +3019,7 @@ public final class AddressBookProtos {
     internal_static_tutorial_Person_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_tutorial_Person_descriptor,
-        new java.lang.String[] { "Name", "Id", "Email", "IncomePercentage", "Phones", });
+        new java.lang.String[] { "Name", "Id", "Email", "IncomePercentage", "Phones", "IncomeHistory", });
     internal_static_tutorial_Person_PhoneNumber_descriptor =
       internal_static_tutorial_Person_descriptor.getNestedTypes().get(0);
     internal_static_tutorial_Person_PhoneNumber_fieldAccessorTable = new

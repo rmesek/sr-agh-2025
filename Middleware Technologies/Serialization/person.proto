@@ -23,6 +23,12 @@ message Person {
   }
 
   repeated PhoneNumber phones = 5;
+
+  //Dodaj do definicji person.proto nową (dowolną) wiadomość zawierającą sekwencję liczb niecałkowitych
+  //(oznaczającą np. wysokość przychodów osoby w ostatnich miesiącach). Użyj słowa kluczowego repeated.
+  //Ponownie skompiluj i przeprowadź serializację nowej wersji wiadomości zawierającej np. trzy liczby w
+  //sekwencji.
+  repeated double IncomeHistory = 6;
 }
 
 message AddressBook {
