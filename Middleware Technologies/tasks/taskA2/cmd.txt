@@ -1,0 +1,1 @@
+protoc.exe -I. --java_out=server/src --plugin=protoc-gen-grpc-java=protoc-gen-grpc-java-1.71.0-windows-x86_64.exe --grpc-java_out=server/src proto/stockalerter.proto
