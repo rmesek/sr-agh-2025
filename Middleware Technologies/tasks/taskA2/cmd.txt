@@ -1,1 +1,2 @@
-protoc.exe -I. --java_out=server/src --plugin=protoc-gen-grpc-java=protoc-gen-grpc-java-1.71.0-windows-x86_64.exe --grpc-java_out=server/src proto/stockalerter.proto
+protoc -Iproto --java_out=server/src --plugin=protoc-gen-grpc-java=protoc-gen-grpc-java-1.71.0-windows-x86_64.exe --grpc-java_out=server/src proto/stockalerter.proto
+python -m grpc_tools.protoc -Iproto --python_out=client/src/gen --pyi_out=client/src/gen --grpc_python_out=client/src/gen proto/stockalerter.proto
