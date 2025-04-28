@@ -12,12 +12,12 @@ public class StockMonitorSimulator implements Runnable {
 
     private static final Logger logger = Logger.getLogger(StockMonitorSimulator.class.getName());
 
-    private final StockAlerterImpl service; // Reference to the service to send updates
+    private final StockAlerterImpl service;
     private final String stockSymbol;
     private final List<String> relatedSymbols;
     private final long updateIntervalMillis;
-    private final double fluctuationAmount; // Max amount price can change each interval
-    private double currentPrice; // Current simulated price
+    private final double fluctuationAmount;
+    private double currentPrice;
 
 
     public StockMonitorSimulator(StockAlerterImpl service,
@@ -26,6 +26,7 @@ public class StockMonitorSimulator implements Runnable {
                                  double fluctuationAmount,
                                  List<String> relatedSymbols,
                                  long updateIntervalMillis) {
+
         if (service == null) {
             throw new IllegalArgumentException("StockAlerterImpl service cannot be null");
         }
@@ -43,7 +44,7 @@ public class StockMonitorSimulator implements Runnable {
         this.stockSymbol = stockSymbol;
         this.currentPrice = startingPrice;
         this.fluctuationAmount = fluctuationAmount;
-        this.relatedSymbols = relatedSymbols != null ? relatedSymbols : List.of(); // Use empty list if null
+        this.relatedSymbols = relatedSymbols != null ? relatedSymbols : List.of();
         this.updateIntervalMillis = updateIntervalMillis;
 
         logger.info(String.format("Initialized StockMonitorSimulator for %s: startPrice=%.2f, fluctuation=%.2f, interval=%dms",
@@ -57,17 +58,12 @@ public class StockMonitorSimulator implements Runnable {
             try {
                 Thread.sleep(updateIntervalMillis);
 
-                // Simulate a price change
                 // Random value between -fluctuationAmount and +fluctuationAmount
                 double change = (Math.random() * 2 - 1) * fluctuationAmount;
                 currentPrice += change;
-                // Ensure price doesn't go below zero (optional realism)
-                if (currentPrice < 0) {
-                    currentPrice = 0;
-                }
 
                 Money priceMoney = Money.newBuilder()
-                        .setCurrencyCode("USD") // Assuming USD, could be configurable
+                        .setCurrencyCode("USD")
                         .setUnits((long) currentPrice)
                         .setNanos((int) ((currentPrice - Math.floor(currentPrice)) * 1_000_000_000))
                         .build();
@@ -77,28 +73,25 @@ public class StockMonitorSimulator implements Runnable {
                 NotificationMessage.Builder notificationBuilder = NotificationMessage.newBuilder()
                         .setStockSymbol(stockSymbol)
                         .setCurrentPrice(priceMoney)
-                        .setAlertType(AlertType.GENERAL_UPDATE) // TODO: Determine based on subscriber thresholds
+                        .setAlertType(AlertType.GENERAL_UPDATE)
                         .setAlertMessage(String.format("Price update for %s: %.2f", stockSymbol, currentPrice))
                         .setTimestamp(timestamp);
 
-                // Add related symbols if any
                 if (!relatedSymbols.isEmpty()) {
                     notificationBuilder.addAllRelatedSymbols(relatedSymbols);
                 }
 
                 NotificationMessage notification = notificationBuilder.build();
 
-                logger.fine("Simulator [" + stockSymbol + "] generated update: " + notification.getAlertMessage());
+                logger.info("Simulator [" + stockSymbol + "] generated update: " + notification.getAlertMessage());
 
-                // Send the update via the service implementation
-                service.sendStockUpdate(notification);
+                service.sendStockUpdate(notification); // Send the update to all subscribers
 
             } catch (InterruptedException e) {
                 logger.info("Stock monitor simulator thread interrupted for " + stockSymbol);
-                Thread.currentThread().interrupt(); // Preserve interrupt status
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Error in stock monitor simulator loop for " + stockSymbol, e);
-                // Avoid stopping the loop on unexpected errors, maybe add a small delay
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ie) {
@@ -109,13 +102,10 @@ public class StockMonitorSimulator implements Runnable {
         logger.info("Stock monitor simulator thread finished for " + stockSymbol);
     }
 
-    /**
-     * Starts the simulator in a new daemon thread.
-     */
     public void start() {
         Thread simulatorThread = new Thread(this);
         simulatorThread.setName("StockMonitor-" + stockSymbol);
-        simulatorThread.setDaemon(true); // Allow JVM to exit if this is the only thread running
+        simulatorThread.setDaemon(true);
         simulatorThread.start();
     }
 }

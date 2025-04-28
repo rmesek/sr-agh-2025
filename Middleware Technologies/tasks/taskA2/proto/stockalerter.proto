@@ -48,7 +48,7 @@ message SubscriptionRequest {
 
 message NotificationMessage {
   string stock_symbol = 1;
-  Money current_price = 2;
+  optional Money current_price = 2;
   AlertType alert_type = 3;
   string alert_message = 4;
   repeated string related_symbols = 5;

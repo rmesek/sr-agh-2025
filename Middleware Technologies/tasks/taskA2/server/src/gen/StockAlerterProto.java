@@ -67,24 +67,25 @@ public final class StockAlerterProto {
       "\0224\n\022notify_above_price\030\003 \001(\0132\023.stockaler" +
       "ter.MoneyH\000\210\001\001\0224\n\022notify_below_price\030\004 \001" +
       "(\0132\023.stockalerter.MoneyH\001\210\001\001B\025\n\023_notify_" +
-      "above_priceB\025\n\023_notify_below_price\"\343\001\n\023N" +
+      "above_priceB\025\n\023_notify_below_price\"\372\001\n\023N" +
       "otificationMessage\022\024\n\014stock_symbol\030\001 \001(\t" +
-      "\022*\n\rcurrent_price\030\002 \001(\0132\023.stockalerter.M" +
-      "oney\022+\n\nalert_type\030\003 \001(\0162\027.stockalerter." +
-      "AlertType\022\025\n\ralert_message\030\004 \001(\t\022\027\n\017rela" +
-      "ted_symbols\030\005 \003(\t\022-\n\ttimestamp\030\006 \001(\0132\032.g" +
-      "oogle.protobuf.Timestamp\"-\n\022UnsubscribeR" +
-      "equest\022\027\n\017subscription_id\030\001 \001(\t\"3\n\023Unsub" +
-      "scribeResponse\022\034\n\024confirmation_message\030\001" +
-      " \001(\t*q\n\tAlertType\022\032\n\026ALERT_TYPE_UNSPECIF" +
-      "IED\020\000\022\031\n\025PRICE_ABOVE_THRESHOLD\020\001\022\031\n\025PRIC" +
-      "E_BELOW_THRESHOLD\020\002\022\022\n\016GENERAL_UPDATE\020\0032" +
-      "\273\001\n\014StockAlerter\022U\n\tSubscribe\022!.stockale" +
-      "rter.SubscriptionRequest\032!.stockalerter." +
-      "NotificationMessage\"\0000\001\022T\n\013Unsubscribe\022 " +
-      ".stockalerter.UnsubscribeRequest\032!.stock" +
-      "alerter.UnsubscribeResponse\"\000B\032\n\003genB\021St" +
-      "ockAlerterProtoP\001b\006proto3"
+      "\022/\n\rcurrent_price\030\002 \001(\0132\023.stockalerter.M" +
+      "oneyH\000\210\001\001\022+\n\nalert_type\030\003 \001(\0162\027.stockale" +
+      "rter.AlertType\022\025\n\ralert_message\030\004 \001(\t\022\027\n" +
+      "\017related_symbols\030\005 \003(\t\022-\n\ttimestamp\030\006 \001(" +
+      "\0132\032.google.protobuf.TimestampB\020\n\016_curren" +
+      "t_price\"-\n\022UnsubscribeRequest\022\027\n\017subscri" +
+      "ption_id\030\001 \001(\t\"3\n\023UnsubscribeResponse\022\034\n" +
+      "\024confirmation_message\030\001 \001(\t*q\n\tAlertType" +
+      "\022\032\n\026ALERT_TYPE_UNSPECIFIED\020\000\022\031\n\025PRICE_AB" +
+      "OVE_THRESHOLD\020\001\022\031\n\025PRICE_BELOW_THRESHOLD" +
+      "\020\002\022\022\n\016GENERAL_UPDATE\020\0032\273\001\n\014StockAlerter\022" +
+      "U\n\tSubscribe\022!.stockalerter.Subscription" +
+      "Request\032!.stockalerter.NotificationMessa" +
+      "ge\"\0000\001\022T\n\013Unsubscribe\022 .stockalerter.Uns" +
+      "ubscribeRequest\032!.stockalerter.Unsubscri" +
+      "beResponse\"\000B\032\n\003genB\021StockAlerterProtoP\001" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

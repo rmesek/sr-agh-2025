@@ -1,11 +1,13 @@
 package server;
 
 import gen.*;
+import io.grpc.Status;
+import io.grpc.stub.ServerCallStreamObserver;
 import io.grpc.stub.StreamObserver;
 
-import java.util.Collections;
-import java.util.Set;
+import java.math.BigDecimal;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,79 +15,146 @@ import com.google.protobuf.Timestamp;
 
 import java.time.Instant;
 
-// Extend the generated base class for the service
 public class StockAlerterImpl extends StockAlerterGrpc.StockAlerterImplBase {
 
     private static final Logger logger = Logger.getLogger(StockAlerterImpl.class.getName());
 
-    // Store active client observers (subscriptions)
-    // Key: subscriptionId, Value: StreamObserver for the client
-    // Use ConcurrentHashMap for thread safety
-    private final ConcurrentHashMap<String, StreamObserver<NotificationMessage>> subscribers = new ConcurrentHashMap<>();
+    // Key: subscriptionId
+    private final ConcurrentHashMap<String, SubscriptionRequest> subscriptionDetails = new ConcurrentHashMap<>();
 
-    // --- Implement the 'subscribe' RPC (Server Streaming) ---
+    // Key: subscriptionId
+    private final ConcurrentHashMap<String, StreamObserver<NotificationMessage>> subscriberObservers = new ConcurrentHashMap<>();
+
+    // Key: stockSymbol, Value: List of subscriptionIds
+    private final ConcurrentHashMap<String, CopyOnWriteArrayList<String>> stockSubscriptions = new ConcurrentHashMap<>();
+
+    private int compareMoney(Money m1, Money m2) {
+        if (!m1.getCurrencyCode().equals(m2.getCurrencyCode())) {
+            throw new IllegalArgumentException("Cannot compare money with different currency codes");
+        }
+        // Convert to BigDecimal for accurate comparison
+        BigDecimal val1 = BigDecimal.valueOf(m1.getUnits()).add(BigDecimal.valueOf(m1.getNanos(), 9));
+        BigDecimal val2 = BigDecimal.valueOf(m2.getUnits()).add(BigDecimal.valueOf(m2.getNanos(), 9));
+        return val1.compareTo(val2);
+    }
+
+    private double moneyToDouble(Money money) {
+        if (money == null) return 0.0;
+        return money.getUnits() + money.getNanos() / 1_000_000_000.0;
+    }
+
+    private void removeSubscription(String subscriptionId) {
+        logger.info("Removing subscription: " + subscriptionId);
+        SubscriptionRequest details = subscriptionDetails.remove(subscriptionId);
+        subscriberObservers.remove(subscriptionId);
+
+        if (details != null) {
+            String stockSymbol = details.getStockSymbol();
+            CopyOnWriteArrayList<String> subs = stockSubscriptions.get(stockSymbol);
+            if (subs != null) {
+                subs.remove(subscriptionId);
+                if (subs.isEmpty()) {
+                    stockSubscriptions.remove(stockSymbol, subs);
+                }
+            }
+        }
+        logger.info("Subscription removed: " + subscriptionId);
+    }
+
     @Override
     public void subscribe(SubscriptionRequest request, StreamObserver<NotificationMessage> responseObserver) {
         String subscriptionId = request.getSubscriptionId();
         String stockSymbol = request.getStockSymbol();
-        logger.info("Received subscription request: ID=" + subscriptionId + ", Symbol=" + stockSymbol);
 
-        // TODO: Add logic to validate the request (e.g., check if stock symbol exists)
+        if (subscriptionId.trim().isEmpty()) {
+            logger.warning("Subscription attempt with empty subscription ID.");
+            responseObserver.onError(Status.INVALID_ARGUMENT
+                    .withDescription("Subscription ID cannot be empty.")
+                    .asRuntimeException());
+            return;
+        }
+        if (stockSymbol.trim().isEmpty()) {
+            logger.warning("Subscription attempt with empty stock symbol. ID: " + subscriptionId);
+            responseObserver.onError(Status.INVALID_ARGUMENT
+                    .withDescription("Stock symbol cannot be empty.")
+                    .asRuntimeException());
+            return;
+        }
+        if (request.hasNotifyAbovePrice() && request.hasNotifyBelowPrice()) {
+            if (compareMoney(request.getNotifyAbovePrice(), request.getNotifyBelowPrice()) < 0) {
+                logger.warning("Subscription attempt where notifyAbovePrice < notifyBelowPrice. ID: " + subscriptionId);
+                responseObserver.onError(Status.INVALID_ARGUMENT
+                        .withDescription("notify_above_price cannot be less than notify_below_price.")
+                        .asRuntimeException());
+                return;
+            }
+        }
 
-        // Store the observer for this subscriber
-        // If a subscription with the same ID already exists, it will be replaced (update subscription)
-        subscribers.put(subscriptionId, responseObserver);
-        logger.info("Client subscribed: " + subscriptionId);
+        logger.info("Received subscription request: ID=" + subscriptionId + ", Symbol=" + stockSymbol
+                + (request.hasNotifyAbovePrice() ? ", Above=" + request.getNotifyAbovePrice().getUnits() : "")
+                + (request.hasNotifyBelowPrice() ? ", Below=" + request.getNotifyBelowPrice().getUnits() : ""));
 
-        // Optional: Send an initial confirmation message
+        // 1. Store the full request details
+        subscriptionDetails.put(subscriptionId, request);
+
+        // 2. Store the observer for sending messages
+        subscriberObservers.put(subscriptionId, responseObserver);
+
+        // 3. Add to the stock symbol -> subscription ID mapping
+        stockSubscriptions.computeIfAbsent(stockSymbol, k -> new CopyOnWriteArrayList<>()).add(subscriptionId);
+
+        logger.info("Client subscribed: " + subscriptionId + " for " + stockSymbol);
+
+        if (responseObserver instanceof ServerCallStreamObserver) {
+            ((ServerCallStreamObserver<NotificationMessage>) responseObserver)
+                    .setOnCancelHandler(() -> {
+                        logger.warning("Client cancelled/disconnected: " + subscriptionId);
+                        removeSubscription(subscriptionId);
+                    });
+        } else {
+            logger.warning("Observer is not a ServerCallStreamObserver, cannot set cancellation handler for " + subscriptionId);
+        }
+
         try {
             Timestamp timestamp = Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()).build();
             NotificationMessage confirmation = NotificationMessage.newBuilder()
                     .setStockSymbol(stockSymbol)
                     .setAlertType(AlertType.GENERAL_UPDATE)
-                    .setAlertMessage("Subscription confirmed for " + stockSymbol)
+                    .setAlertMessage("Subscription confirmed for " + stockSymbol + " with ID: " + subscriptionId)
                     .setTimestamp(timestamp)
                     .build();
             responseObserver.onNext(confirmation);
+            logger.info("Sent confirmation to " + subscriptionId);
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error sending confirmation to " + subscriptionId, e);
-            subscribers.remove(subscriptionId); // Clean up if sending failed immediately
+            logger.log(Level.SEVERE, "Error sending confirmation to " + subscriptionId + ". Removing subscription.", e);
+            removeSubscription(subscriptionId);
         }
-
-
-        // --- IMPORTANT ---
-        // Keep the connection open for streaming. DO NOT call responseObserver.onCompleted() here.
-        // You will call responseObserver.onNext() later when you have stock updates to send.
-        // You need a separate mechanism (e.g., a background thread, message queue listener)
-        // to monitor stock prices and push updates to the relevant observers in the 'subscribers' map.
-
-        // Handle client disconnection: gRPC might provide mechanisms, or you might need custom handling
-        // For example, using ServerCallStreamObserver if more control over the stream is needed.
-        // ((io.grpc.stub.ServerCallStreamObserver<NotificationMessage>) responseObserver).setOnCancelHandler(() -> {
-        //     logger.info("Client disconnected: " + subscriptionId);
-        //     subscribers.remove(subscriptionId);
-        // });
     }
 
-    // --- Implement the 'unsubscribe' RPC (Unary) ---
     @Override
     public void unsubscribe(UnsubscribeRequest request, StreamObserver<UnsubscribeResponse> responseObserver) {
         String subscriptionId = request.getSubscriptionId();
+        if (subscriptionId.trim().isEmpty()) {
+            logger.warning("Unsubscribe attempt with empty subscription ID.");
+            responseObserver.onNext(UnsubscribeResponse.newBuilder()
+                    .setConfirmationMessage("Error: Subscription ID cannot be empty.")
+                    .build());
+            responseObserver.onCompleted();
+            return;
+        }
         logger.info("Received unsubscribe request: ID=" + subscriptionId);
 
-        // Remove the subscriber
-        StreamObserver<NotificationMessage> observer = subscribers.remove(subscriptionId);
-
+        StreamObserver<NotificationMessage> observer = subscriberObservers.get(subscriptionId);
         String message;
+
         if (observer != null) {
+            removeSubscription(subscriptionId); // Remove from all maps
             message = "Successfully unsubscribed: " + subscriptionId;
             logger.info(message);
             try {
-                // Optionally notify the client stream that it's completed from the server side
                 observer.onCompleted();
             } catch (Exception e) {
-                // Log error if observer is already closed/cancelled
-                logger.log(Level.FINE, "Observer already closed for " + subscriptionId, e);
+                logger.log(Level.INFO, "Observer already closed or error during onCompleted for " + subscriptionId, e);
             }
         } else {
             message = "Subscription ID not found: " + subscriptionId;
@@ -100,28 +169,59 @@ public class StockAlerterImpl extends StockAlerterGrpc.StockAlerterImplBase {
         responseObserver.onCompleted();
     }
 
-    // --- Method to be called by your stock update mechanism ---
-    public void sendStockUpdate(NotificationMessage notification) {
-        String targetSymbol = notification.getStockSymbol();
-        logger.info("Attempting to send update for symbol: " + targetSymbol);
+    public void sendStockUpdate(NotificationMessage generalUpdate) {
+        String stockSymbol = generalUpdate.getStockSymbol();
+        Money currentPrice = generalUpdate.getCurrentPrice();
+        Timestamp timestamp = generalUpdate.getTimestamp();
 
-        // Iterate over subscribers and send to those interested in this stock symbol
-        // NOTE: This is a basic approach. For efficiency, you might map stock symbols
-        // directly to lists of observers rather than iterating through all subscribers.
-        subscribers.forEach((subscriptionId, observer) -> {
-            // TODO: Add logic here to check if this subscriber's request matches the notification
-            // (e.g., check stock symbol, price thresholds from the original SubscriptionRequest)
-            // For now, we assume any subscriber might be interested (needs refinement)
+        CopyOnWriteArrayList<String> interestedSubscriptionIds = stockSubscriptions.get(stockSymbol);
 
-            logger.fine("Sending update to subscriber: " + subscriptionId);
-            try {
-                observer.onNext(notification);
-            } catch (Exception e) {
-                // Handle potential errors (e.g., client disconnected)
-                logger.log(Level.WARNING, "Error sending update to " + subscriptionId + ". Removing subscriber.", e);
-                // Remove the observer if sending fails (likely disconnected)
-                subscribers.remove(subscriptionId);
+        if (interestedSubscriptionIds == null || interestedSubscriptionIds.isEmpty()) {
+            return; // No one is interested in this stock
+        }
+
+        for (String subId : interestedSubscriptionIds) {
+            SubscriptionRequest subDetails = subscriptionDetails.get(subId);
+            StreamObserver<NotificationMessage> observer = subscriberObservers.get(subId);
+
+            if (subDetails == null || observer == null) {
+                continue;
             }
-        });
+
+            AlertType alertType = AlertType.GENERAL_UPDATE; // Default
+            String alertMessage = String.format("Price update for %s: %.2f", stockSymbol, moneyToDouble(currentPrice));
+
+            // 1. Check ABOVE threshold
+            if (subDetails.hasNotifyAbovePrice() && compareMoney(currentPrice, subDetails.getNotifyAbovePrice()) > 0) {
+                alertType = AlertType.PRICE_ABOVE_THRESHOLD;
+                alertMessage = String.format("ALERT! %s price (%.2f) is ABOVE threshold (%.2f)",
+                        stockSymbol, moneyToDouble(currentPrice), moneyToDouble(subDetails.getNotifyAbovePrice()));
+                logger.info("Triggered ABOVE threshold for " + subId + " on " + stockSymbol);
+            }
+            // 2. Check BELOW threshold (only if ABOVE didn't trigger)
+            else if (subDetails.hasNotifyBelowPrice() && compareMoney(currentPrice, subDetails.getNotifyBelowPrice()) < 0) {
+                alertType = AlertType.PRICE_BELOW_THRESHOLD;
+                alertMessage = String.format("ALERT! %s price (%.2f) is BELOW threshold (%.2f)",
+                        stockSymbol, moneyToDouble(currentPrice), moneyToDouble(subDetails.getNotifyBelowPrice()));
+                logger.info("Triggered BELOW threshold for " + subId + " on " + stockSymbol);
+            }
+            // 3. If no specific thresholds triggered, send a general update
+
+            NotificationMessage specificNotification = NotificationMessage.newBuilder()
+                    .setStockSymbol(stockSymbol)
+                    .setCurrentPrice(currentPrice)
+                    .setAlertType(alertType)
+                    .setAlertMessage(alertMessage)
+                    .addAllRelatedSymbols(generalUpdate.getRelatedSymbolsList()) // Copy related symbols
+                    .setTimestamp(timestamp)
+                    .build();
+            try {
+                observer.onNext(specificNotification);
+            } catch (Exception e) {
+                // Handle potential errors
+                logger.log(Level.WARNING, "Error sending update to " + subId + ". Removing subscriber.", e);
+                removeSubscription(subId);
+            }
+        }
     }
 }

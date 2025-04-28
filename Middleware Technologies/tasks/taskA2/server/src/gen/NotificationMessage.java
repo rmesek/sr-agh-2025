@@ -90,7 +90,7 @@ private static final long serialVersionUID = 0L;
   public static final int CURRENT_PRICE_FIELD_NUMBER = 2;
   private gen.Money currentPrice_;
   /**
-   * <code>.stockalerter.Money current_price = 2;</code>
+   * <code>optional .stockalerter.Money current_price = 2;</code>
    * @return Whether the currentPrice field is set.
    */
   @java.lang.Override
@@ -98,7 +98,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.stockalerter.Money current_price = 2;</code>
+   * <code>optional .stockalerter.Money current_price = 2;</code>
    * @return The currentPrice.
    */
   @java.lang.Override
@@ -106,7 +106,7 @@ private static final long serialVersionUID = 0L;
     return currentPrice_ == null ? gen.Money.getDefaultInstance() : currentPrice_;
   }
   /**
-   * <code>.stockalerter.Money current_price = 2;</code>
+   * <code>optional .stockalerter.Money current_price = 2;</code>
    */
   @java.lang.Override
   public gen.MoneyOrBuilder getCurrentPriceOrBuilder() {
@@ -771,14 +771,14 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilder<
         gen.Money, gen.Money.Builder, gen.MoneyOrBuilder> currentPriceBuilder_;
     /**
-     * <code>.stockalerter.Money current_price = 2;</code>
+     * <code>optional .stockalerter.Money current_price = 2;</code>
      * @return Whether the currentPrice field is set.
      */
     public boolean hasCurrentPrice() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.stockalerter.Money current_price = 2;</code>
+     * <code>optional .stockalerter.Money current_price = 2;</code>
      * @return The currentPrice.
      */
     public gen.Money getCurrentPrice() {
@@ -789,7 +789,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.stockalerter.Money current_price = 2;</code>
+     * <code>optional .stockalerter.Money current_price = 2;</code>
      */
     public Builder setCurrentPrice(gen.Money value) {
       if (currentPriceBuilder_ == null) {
@@ -805,7 +805,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.stockalerter.Money current_price = 2;</code>
+     * <code>optional .stockalerter.Money current_price = 2;</code>
      */
     public Builder setCurrentPrice(
         gen.Money.Builder builderForValue) {
@@ -819,7 +819,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.stockalerter.Money current_price = 2;</code>
+     * <code>optional .stockalerter.Money current_price = 2;</code>
      */
     public Builder mergeCurrentPrice(gen.Money value) {
       if (currentPriceBuilder_ == null) {
@@ -840,7 +840,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.stockalerter.Money current_price = 2;</code>
+     * <code>optional .stockalerter.Money current_price = 2;</code>
      */
     public Builder clearCurrentPrice() {
       bitField0_ = (bitField0_ & ~0x00000002);
@@ -853,7 +853,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.stockalerter.Money current_price = 2;</code>
+     * <code>optional .stockalerter.Money current_price = 2;</code>
      */
     public gen.Money.Builder getCurrentPriceBuilder() {
       bitField0_ |= 0x00000002;
@@ -861,7 +861,7 @@ private static final long serialVersionUID = 0L;
       return internalGetCurrentPriceFieldBuilder().getBuilder();
     }
     /**
-     * <code>.stockalerter.Money current_price = 2;</code>
+     * <code>optional .stockalerter.Money current_price = 2;</code>
      */
     public gen.MoneyOrBuilder getCurrentPriceOrBuilder() {
       if (currentPriceBuilder_ != null) {
@@ -872,7 +872,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.stockalerter.Money current_price = 2;</code>
+     * <code>optional .stockalerter.Money current_price = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilder<
         gen.Money, gen.Money.Builder, gen.MoneyOrBuilder> 

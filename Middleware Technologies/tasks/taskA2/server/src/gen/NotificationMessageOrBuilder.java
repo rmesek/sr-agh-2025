@@ -22,17 +22,17 @@ public interface NotificationMessageOrBuilder extends
       getStockSymbolBytes();
 
   /**
-   * <code>.stockalerter.Money current_price = 2;</code>
+   * <code>optional .stockalerter.Money current_price = 2;</code>
    * @return Whether the currentPrice field is set.
    */
   boolean hasCurrentPrice();
   /**
-   * <code>.stockalerter.Money current_price = 2;</code>
+   * <code>optional .stockalerter.Money current_price = 2;</code>
    * @return The currentPrice.
    */
   gen.Money getCurrentPrice();
   /**
-   * <code>.stockalerter.Money current_price = 2;</code>
+   * <code>optional .stockalerter.Money current_price = 2;</code>
    */
   gen.MoneyOrBuilder getCurrentPriceOrBuilder();
 
