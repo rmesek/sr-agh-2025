@@ -6,5 +6,6 @@ requires-python = ">=3.12"
 dependencies = [
     "grpcio==1.72.0",
     "grpcio-tools==1.72.0",
+    "prompt-toolkit>=3.0.51",
     "protobuf==6.30.2",
 ]
