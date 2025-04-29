@@ -12,6 +12,14 @@ from prompt_toolkit.widgets import TextArea
 output_field = TextArea(multiline=False)
 
 
+def log_output(text: str):
+    """
+    Write text to the output field.
+    """
+    output_field.buffer.insert_text(text)
+    # output_field.buffer.cursor_position = len(output_field.buffer.text)
+
+
 # input Area
 def input_accepted(buff: Buffer) -> bool | None:
     """
@@ -20,7 +28,7 @@ def input_accepted(buff: Buffer) -> bool | None:
     and then clears the input buffer.
     """
     input_text = buff.text
-    output_field.buffer.insert_text(f"Input received: {input_text}\n")
+    log_output(f"Input received: {input_text}\n")
     buff.reset()
 
 
@@ -69,16 +77,14 @@ async def print_hello():
     """
     try:
         while True:
-            # insert text into the buffer associated with the output_field
-            output_field.buffer.insert_text("Hello World\n")
-            # output_field.buffer.cursor_position = len(output_field.buffer.text)
+            log_output("Hello World\n")
             await asyncio.sleep(1)
     except asyncio.CancelledError:
         # handle task cancellation gracefully when the application exits
         pass
     except Exception as e:
         # log other potential errors
-        output_field.buffer.insert_text(f"Error in print_hello: {e}\n")
+        log_output("Error in print_hello: {e}\n")
 
 
 async def main():
