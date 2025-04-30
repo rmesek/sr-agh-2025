@@ -383,11 +383,15 @@ async def main():
     asyncio.create_task(start_client(DEFAULT_SERVER_ADDRESS))
     # asyncio.create_task(print_hello())
 
-    log_output("Press Ctrl+C or Ctrl+Q to exit.\n")
-    await application.run_async()
-    print("Exiting application...")
-    await stop_client()
-    print("Application exited.")
+    try:
+        log_output("Press Ctrl+C or Ctrl+Q to exit.\n")
+        await application.run_async()
+    except Exception as e:
+        log_output(f"Error in main loop: {e}\n")
+    finally:
+        print("Exiting application...")
+        await stop_client()
+        print("Application exited.")
 
 
 if __name__ == "__main__":
