@@ -83,7 +83,7 @@ public class StockMonitorSimulator implements Runnable {
 
                 NotificationMessage notification = notificationBuilder.build();
 
-                logger.info("Simulator [" + stockSymbol + "] generated update: " + notification.getAlertMessage());
+                logger.fine("Simulator [" + stockSymbol + "] generated update: " + notification.getAlertMessage());
 
                 service.sendStockUpdate(notification); // Send the update to all subscribers
 

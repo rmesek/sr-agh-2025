@@ -81,7 +81,7 @@ public class StockAlerterImpl extends StockAlerterGrpc.StockAlerterImplBase {
             return;
         }
         if (request.hasNotifyAbovePrice() && request.hasNotifyBelowPrice()) {
-            if (compareMoney(request.getNotifyAbovePrice(), request.getNotifyBelowPrice()) < 0) {
+            if (compareMoney(request.getNotifyAbovePrice(), request.getNotifyBelowPrice()) > 0) {
                 logger.warning("Subscription attempt where notifyAbovePrice < notifyBelowPrice. ID: " + subscriptionId);
                 responseObserver.onError(Status.INVALID_ARGUMENT
                         .withDescription("notify_above_price cannot be less than notify_below_price.")
