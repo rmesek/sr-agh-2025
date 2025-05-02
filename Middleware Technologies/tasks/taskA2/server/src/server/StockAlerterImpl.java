@@ -172,7 +172,6 @@ public class StockAlerterImpl extends StockAlerterGrpc.StockAlerterImplBase {
     public void sendStockUpdate(NotificationMessage generalUpdate) {
         String stockSymbol = generalUpdate.getStockSymbol();
         Money currentPrice = generalUpdate.getCurrentPrice();
-        Timestamp timestamp = generalUpdate.getTimestamp();
 
         CopyOnWriteArrayList<String> interestedSubscriptionIds = stockSubscriptions.get(stockSymbol);
 
@@ -184,44 +183,62 @@ public class StockAlerterImpl extends StockAlerterGrpc.StockAlerterImplBase {
             SubscriptionRequest subDetails = subscriptionDetails.get(subId);
             StreamObserver<NotificationMessage> observer = subscriberObservers.get(subId);
 
-            if (subDetails == null || observer == null) {
-                continue;
+            if (subDetails == null || observer == null) continue;
+
+            if (subDetails.hasNotifyAbovePrice()) {
+                Money abovePrice = subDetails.getNotifyAbovePrice();
+                if (compareMoney(currentPrice, abovePrice) > 0) {
+                    logger.info("Triggered ABOVE threshold for " + subId + " on " + stockSymbol);
+
+                    NotificationMessage aboveNotification = NotificationMessage.newBuilder()
+                            .setStockSymbol(stockSymbol)
+                            .setCurrentPrice(currentPrice)
+                            .setAlertType(AlertType.PRICE_ABOVE_THRESHOLD)
+                            .setAlertMessage(generalUpdate.getAlertMessage())
+                            .addAllRelatedSymbols(generalUpdate.getRelatedSymbolsList())
+                            .setTimestamp(generalUpdate.getTimestamp())
+                            .build();
+                    try {
+                        observer.onNext(aboveNotification);
+                    } catch (Exception e) {
+                        logger.log(Level.WARNING, "Error sending ABOVE threshold update to " + subId + ". Removing subscriber.", e);
+                        removeSubscription(subId); // Remove problematic subscriber
+                        continue; // Skip further checks for this subscriber in this update cycle
+                    }
+                }
             }
 
-            AlertType alertType = AlertType.GENERAL_UPDATE; // Default
-            String alertMessage = String.format("Price update for %s: %.2f", stockSymbol, moneyToDouble(currentPrice));
+            if (subDetails.hasNotifyBelowPrice()) {
+                Money belowPrice = subDetails.getNotifyBelowPrice();
+                if (compareMoney(currentPrice, belowPrice) < 0) {
+                    logger.info("Triggered BELOW threshold for " + subId + " on " + stockSymbol);
 
-            // 1. Check ABOVE threshold
-            if (subDetails.hasNotifyAbovePrice() && compareMoney(currentPrice, subDetails.getNotifyAbovePrice()) > 0) {
-                alertType = AlertType.PRICE_ABOVE_THRESHOLD;
-                alertMessage = String.format("ALERT! %s price (%.2f) is ABOVE threshold (%.2f)",
-                        stockSymbol, moneyToDouble(currentPrice), moneyToDouble(subDetails.getNotifyAbovePrice()));
-                logger.info("Triggered ABOVE threshold for " + subId + " on " + stockSymbol);
+                    NotificationMessage belowNotification = NotificationMessage.newBuilder()
+                            .setStockSymbol(stockSymbol)
+                            .setCurrentPrice(currentPrice)
+                            .setAlertType(AlertType.PRICE_BELOW_THRESHOLD)
+                            .setAlertMessage(generalUpdate.getAlertMessage())
+                            .addAllRelatedSymbols(generalUpdate.getRelatedSymbolsList())
+                            .setTimestamp(generalUpdate.getTimestamp())
+                            .build();
+                    try {
+                        observer.onNext(belowNotification);
+                    } catch (Exception e) {
+                        logger.log(Level.WARNING, "Error sending BELOW threshold update to " + subId + ". Removing subscriber.", e);
+                        removeSubscription(subId); // Remove problematic subscriber
+                        continue; // Skip further checks for this subscriber in this update cycle
+                    }
+                }
             }
-            // 2. Check BELOW threshold (only if ABOVE didn't trigger)
-            else if (subDetails.hasNotifyBelowPrice() && compareMoney(currentPrice, subDetails.getNotifyBelowPrice()) < 0) {
-                alertType = AlertType.PRICE_BELOW_THRESHOLD;
-                alertMessage = String.format("ALERT! %s price (%.2f) is BELOW threshold (%.2f)",
-                        stockSymbol, moneyToDouble(currentPrice), moneyToDouble(subDetails.getNotifyBelowPrice()));
-                logger.info("Triggered BELOW threshold for " + subId + " on " + stockSymbol);
-            }
-            // 3. If no specific thresholds triggered, send a general update
 
-            NotificationMessage specificNotification = NotificationMessage.newBuilder()
-                    .setStockSymbol(stockSymbol)
-                    .setCurrentPrice(currentPrice)
-                    .setAlertType(alertType)
-                    .setAlertMessage(alertMessage)
-                    .addAllRelatedSymbols(generalUpdate.getRelatedSymbolsList()) // Copy related symbols
-                    .setTimestamp(timestamp)
-                    .build();
-            try {
-                observer.onNext(specificNotification);
-            } catch (Exception e) {
-                // Handle potential errors
-                logger.log(Level.WARNING, "Error sending update to " + subId + ". Removing subscriber.", e);
-                removeSubscription(subId);
+            if (!subDetails.hasNotifyAbovePrice() && !subDetails.hasNotifyBelowPrice()) {
+                try {
+                    observer.onNext(generalUpdate);
+                } catch (Exception e) {
+                    logger.log(Level.WARNING, "Error sending general update to " + subId + ". Removing subscriber.", e);
+                    removeSubscription(subId); // Remove problematic subscriber
+                }
             }
-        }
+        } // End for subId
     }
 }
