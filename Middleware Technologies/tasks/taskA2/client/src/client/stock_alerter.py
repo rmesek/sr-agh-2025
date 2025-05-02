@@ -78,12 +78,9 @@ class StockAlerterClient:
                 grpc_channel = grpc.aio.insecure_channel(
                     self.server_address,
                     options=[
-                        ('grpc.keepalive_time_ms', 10000),  # Send keepalive every 10s
+                        ('grpc.keepalive_time_ms', 8000),  # Send keepalive every 8s
                         ('grpc.keepalive_timeout_ms', 5000),  # Wait 5s for pong ack
-                        ('grpc.keepalive_permit_without_calls', True),  # Allow keepalive pings when there are no calls
-                        ('grpc.http2.max_pings_without_data', 0),  # Allow infinite pings without data
-                        ('grpc.http2.min_time_between_pings_ms', 10000),  # Allow pings every 10s
-                        ('grpc.http2.min_ping_interval_without_data_ms', 5000),  # Allow pings when idle every 5s
+                        ('grpc.keepalive_permit_without_calls', 1),  # Allow keepalive pings when there are no calls
                     ]
                 )
                 await asyncio.wait_for(grpc_channel.channel_ready(), timeout=5.0)

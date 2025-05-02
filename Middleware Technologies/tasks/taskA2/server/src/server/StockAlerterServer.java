@@ -23,6 +23,8 @@ public class StockAlerterServer {
     public void start() throws IOException {
         server = ServerBuilder.forPort(port)
                 .addService(serviceImpl)
+                .permitKeepAliveTime(5000, TimeUnit.MILLISECONDS)
+                .permitKeepAliveWithoutCalls(true)
                 .build()
                 .start();
         logger.info("Server started, listening on " + port);
