@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package item;
+
+service ItemService {
+  rpc GetItemList (GetItemListRequest) returns (GetItemListResponse) {}
+  rpc GetItem (GetItemRequest) returns (Item) {}
+  rpc AddItem (AddItemRequest) returns (Item) {}
+  rpc ClearItemList (ClearItemListRequest) returns (ClearItemListResponse) {}
+}
+
+message Item {
+  uint64 id = 1;
+  string name = 2;
+  float value = 3;
+  optional string details = 4;
+}
+
+message GetItemListRequest {
+}
+
+message GetItemListResponse {
+  repeated Item items = 1;
+}
+
+message GetItemRequest {
+  uint64 id = 1;
+}
+
+message AddItemRequest {
+  string name = 1;
+  float value = 2;
+  optional string details = 3;
+}
+
+message ClearItemListRequest {
+}
+
+message ClearItemListResponse {
+}

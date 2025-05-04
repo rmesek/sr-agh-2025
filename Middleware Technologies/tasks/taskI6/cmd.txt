@@ -1,0 +1,1 @@
+python -m grpc_tools.protoc -Iproto --python_out=gen --pyi_out=gen --grpc_python_out=gen proto/item.proto
