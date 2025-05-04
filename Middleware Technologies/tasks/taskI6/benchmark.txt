@@ -1,0 +1,23 @@
+INFO:root:gRPC: benchmark localhost:50051
+INFO:root:gRPC: Channel created in 2.7318 ms
+INFO:root:gRPC: Added items (1000) in 1.9286 ms
+INFO:root:gRPC: add_request size: 38775 bytes
+INFO:root:gRPC: Retrieved items (1000) in 0.7513 ms
+INFO:root:gRPC: get_response size: 41648 bytes
+INFO:root:gRPC: Total time: 10.0614 ms
+
+INFO:root:REST: benchmark localhost:50051
+INFO:root:REST: Session created in 0.0560 ms
+INFO:root:REST: Added items (1000) in 514.1089 ms
+INFO:root:REST: Sum of add_requests size: 71669 bytes
+INFO:root:REST: Retrieved items (1000) in 1.5962 ms
+INFO:root:REST: get_response size: 76563 bytes
+INFO:root:REST: Total time: 522.1975 ms
+
+INFO:root:GraphQL: benchmark localhost:50051
+INFO:root:GraphQL: Session created in 0.0503 ms
+INFO:root:GraphQL: Added items (1000) in 20.9127 ms
+INFO:root:GraphQL: add_request size: 73830 bytes
+INFO:root:GraphQL: Retrieved items (1000) in 11.6293 ms
+INFO:root:GraphQL: get_response size: 84583 bytes
+INFO:root:GraphQL: Total time: 39.5359 ms
