@@ -22,7 +22,7 @@ app = FastAPI()
 
 
 @app.get("/items", response_model=list[Item])
-async def get_item_list():
+async def get_items():
     global items_db, item_id_counter
 
     return list(items_db.values())
@@ -49,7 +49,7 @@ async def add_item(item: ItemBase):
 
 
 @app.delete("/items", status_code=204)
-async def clear_item_list():
+async def clear_items():
     global items_db, item_id_counter
 
     items_db.clear()
