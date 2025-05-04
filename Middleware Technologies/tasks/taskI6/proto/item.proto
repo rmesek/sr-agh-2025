@@ -3,10 +3,9 @@ syntax = "proto3";
 package item;
 
 service ItemService {
-  rpc GetItemList (GetItemListRequest) returns (GetItemListResponse) {}
-  rpc GetItem (GetItemRequest) returns (Item) {}
-  rpc AddItem (AddItemRequest) returns (Item) {}
-  rpc ClearItemList (ClearItemListRequest) returns (ClearItemListResponse) {}
+  rpc GetItems (GetItemsRequest) returns (GetItemsResponse) {}
+  rpc AddItems (AddItemsRequest) returns (AddItemsResponse) {}
+  rpc ClearItems (ClearItemsRequest) returns (ClearItemsResponse) {}
 }
 
 message Item {
@@ -16,25 +15,30 @@ message Item {
   optional string details = 4;
 }
 
-message GetItemListRequest {
-}
-
-message GetItemListResponse {
-  repeated Item items = 1;
-}
-
-message GetItemRequest {
-  uint64 id = 1;
-}
-
-message AddItemRequest {
+message ItemInput {
   string name = 1;
   float value = 2;
   optional string details = 3;
 }
 
-message ClearItemListRequest {
+message GetItemsRequest {
+  repeated uint64 item_ids = 1;
 }
 
-message ClearItemListResponse {
+message GetItemsResponse {
+  repeated Item items = 1;
+}
+
+message AddItemsRequest {
+  repeated ItemInput items = 1;
+}
+
+message AddItemsResponse {
+  repeated Item items = 1;
+}
+
+message ClearItemsRequest {
+}
+
+message ClearItemsResponse {
 }

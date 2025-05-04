@@ -34,50 +34,39 @@ class ItemServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.GetItemList = channel.unary_unary(
-                '/item.ItemService/GetItemList',
-                request_serializer=item__pb2.GetItemListRequest.SerializeToString,
-                response_deserializer=item__pb2.GetItemListResponse.FromString,
+        self.GetItems = channel.unary_unary(
+                '/item.ItemService/GetItems',
+                request_serializer=item__pb2.GetItemsRequest.SerializeToString,
+                response_deserializer=item__pb2.GetItemsResponse.FromString,
                 _registered_method=True)
-        self.GetItem = channel.unary_unary(
-                '/item.ItemService/GetItem',
-                request_serializer=item__pb2.GetItemRequest.SerializeToString,
-                response_deserializer=item__pb2.Item.FromString,
+        self.AddItems = channel.unary_unary(
+                '/item.ItemService/AddItems',
+                request_serializer=item__pb2.AddItemsRequest.SerializeToString,
+                response_deserializer=item__pb2.AddItemsResponse.FromString,
                 _registered_method=True)
-        self.AddItem = channel.unary_unary(
-                '/item.ItemService/AddItem',
-                request_serializer=item__pb2.AddItemRequest.SerializeToString,
-                response_deserializer=item__pb2.Item.FromString,
-                _registered_method=True)
-        self.ClearItemList = channel.unary_unary(
-                '/item.ItemService/ClearItemList',
-                request_serializer=item__pb2.ClearItemListRequest.SerializeToString,
-                response_deserializer=item__pb2.ClearItemListResponse.FromString,
+        self.ClearItems = channel.unary_unary(
+                '/item.ItemService/ClearItems',
+                request_serializer=item__pb2.ClearItemsRequest.SerializeToString,
+                response_deserializer=item__pb2.ClearItemsResponse.FromString,
                 _registered_method=True)
 
 
 class ItemServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def GetItemList(self, request, context):
+    def GetItems(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetItem(self, request, context):
+    def AddItems(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def AddItem(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ClearItemList(self, request, context):
+    def ClearItems(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -86,25 +75,20 @@ class ItemServiceServicer(object):
 
 def add_ItemServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'GetItemList': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetItemList,
-                    request_deserializer=item__pb2.GetItemListRequest.FromString,
-                    response_serializer=item__pb2.GetItemListResponse.SerializeToString,
+            'GetItems': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetItems,
+                    request_deserializer=item__pb2.GetItemsRequest.FromString,
+                    response_serializer=item__pb2.GetItemsResponse.SerializeToString,
             ),
-            'GetItem': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetItem,
-                    request_deserializer=item__pb2.GetItemRequest.FromString,
-                    response_serializer=item__pb2.Item.SerializeToString,
+            'AddItems': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddItems,
+                    request_deserializer=item__pb2.AddItemsRequest.FromString,
+                    response_serializer=item__pb2.AddItemsResponse.SerializeToString,
             ),
-            'AddItem': grpc.unary_unary_rpc_method_handler(
-                    servicer.AddItem,
-                    request_deserializer=item__pb2.AddItemRequest.FromString,
-                    response_serializer=item__pb2.Item.SerializeToString,
-            ),
-            'ClearItemList': grpc.unary_unary_rpc_method_handler(
-                    servicer.ClearItemList,
-                    request_deserializer=item__pb2.ClearItemListRequest.FromString,
-                    response_serializer=item__pb2.ClearItemListResponse.SerializeToString,
+            'ClearItems': grpc.unary_unary_rpc_method_handler(
+                    servicer.ClearItems,
+                    request_deserializer=item__pb2.ClearItemsRequest.FromString,
+                    response_serializer=item__pb2.ClearItemsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -118,7 +102,7 @@ class ItemService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def GetItemList(request,
+    def GetItems(request,
             target,
             options=(),
             channel_credentials=None,
@@ -131,9 +115,9 @@ class ItemService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/item.ItemService/GetItemList',
-            item__pb2.GetItemListRequest.SerializeToString,
-            item__pb2.GetItemListResponse.FromString,
+            '/item.ItemService/GetItems',
+            item__pb2.GetItemsRequest.SerializeToString,
+            item__pb2.GetItemsResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -145,7 +129,7 @@ class ItemService(object):
             _registered_method=True)
 
     @staticmethod
-    def GetItem(request,
+    def AddItems(request,
             target,
             options=(),
             channel_credentials=None,
@@ -158,9 +142,9 @@ class ItemService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/item.ItemService/GetItem',
-            item__pb2.GetItemRequest.SerializeToString,
-            item__pb2.Item.FromString,
+            '/item.ItemService/AddItems',
+            item__pb2.AddItemsRequest.SerializeToString,
+            item__pb2.AddItemsResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -172,7 +156,7 @@ class ItemService(object):
             _registered_method=True)
 
     @staticmethod
-    def AddItem(request,
+    def ClearItems(request,
             target,
             options=(),
             channel_credentials=None,
@@ -185,36 +169,9 @@ class ItemService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/item.ItemService/AddItem',
-            item__pb2.AddItemRequest.SerializeToString,
-            item__pb2.Item.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-    @staticmethod
-    def ClearItemList(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/item.ItemService/ClearItemList',
-            item__pb2.ClearItemListRequest.SerializeToString,
-            item__pb2.ClearItemListResponse.FromString,
+            '/item.ItemService/ClearItems',
+            item__pb2.ClearItemsRequest.SerializeToString,
+            item__pb2.ClearItemsResponse.FromString,
             options,
             channel_credentials,
             insecure,

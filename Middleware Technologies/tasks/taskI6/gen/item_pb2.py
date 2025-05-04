@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nitem.proto\x12\x04item\"Q\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05value\x18\x03 \x01(\x02\x12\x14\n\x07\x64\x65tails\x18\x04 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_details\"\x14\n\x12GetItemListRequest\"0\n\x13GetItemListResponse\x12\x19\n\x05items\x18\x01 \x03(\x0b\x32\n.item.Item\"\x1c\n\x0eGetItemRequest\x12\n\n\x02id\x18\x01 \x01(\x04\"O\n\x0e\x41\x64\x64ItemRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x02\x12\x14\n\x07\x64\x65tails\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_details\"\x16\n\x14\x43learItemListRequest\"\x17\n\x15\x43learItemListResponse2\xfd\x01\n\x0bItemService\x12\x44\n\x0bGetItemList\x12\x18.item.GetItemListRequest\x1a\x19.item.GetItemListResponse\"\x00\x12-\n\x07GetItem\x12\x14.item.GetItemRequest\x1a\n.item.Item\"\x00\x12-\n\x07\x41\x64\x64Item\x12\x14.item.AddItemRequest\x1a\n.item.Item\"\x00\x12J\n\rClearItemList\x12\x1a.item.ClearItemListRequest\x1a\x1b.item.ClearItemListResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\nitem.proto\x12\x04item\"Q\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\x04\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05value\x18\x03 \x01(\x02\x12\x14\n\x07\x64\x65tails\x18\x04 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_details\"J\n\tItemInput\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x02\x12\x14\n\x07\x64\x65tails\x18\x03 \x01(\tH\x00\x88\x01\x01\x42\n\n\x08_details\"#\n\x0fGetItemsRequest\x12\x10\n\x08item_ids\x18\x01 \x03(\x04\"-\n\x10GetItemsResponse\x12\x19\n\x05items\x18\x01 \x03(\x0b\x32\n.item.Item\"1\n\x0f\x41\x64\x64ItemsRequest\x12\x1e\n\x05items\x18\x01 \x03(\x0b\x32\x0f.item.ItemInput\"-\n\x10\x41\x64\x64ItemsResponse\x12\x19\n\x05items\x18\x01 \x03(\x0b\x32\n.item.Item\"\x13\n\x11\x43learItemsRequest\"\x14\n\x12\x43learItemsResponse2\xca\x01\n\x0bItemService\x12;\n\x08GetItems\x12\x15.item.GetItemsRequest\x1a\x16.item.GetItemsResponse\"\x00\x12;\n\x08\x41\x64\x64Items\x12\x15.item.AddItemsRequest\x1a\x16.item.AddItemsResponse\"\x00\x12\x41\n\nClearItems\x12\x17.item.ClearItemsRequest\x1a\x18.item.ClearItemsResponse\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,18 +33,20 @@ if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_ITEM']._serialized_start=20
   _globals['_ITEM']._serialized_end=101
-  _globals['_GETITEMLISTREQUEST']._serialized_start=103
-  _globals['_GETITEMLISTREQUEST']._serialized_end=123
-  _globals['_GETITEMLISTRESPONSE']._serialized_start=125
-  _globals['_GETITEMLISTRESPONSE']._serialized_end=173
-  _globals['_GETITEMREQUEST']._serialized_start=175
-  _globals['_GETITEMREQUEST']._serialized_end=203
-  _globals['_ADDITEMREQUEST']._serialized_start=205
-  _globals['_ADDITEMREQUEST']._serialized_end=284
-  _globals['_CLEARITEMLISTREQUEST']._serialized_start=286
-  _globals['_CLEARITEMLISTREQUEST']._serialized_end=308
-  _globals['_CLEARITEMLISTRESPONSE']._serialized_start=310
-  _globals['_CLEARITEMLISTRESPONSE']._serialized_end=333
-  _globals['_ITEMSERVICE']._serialized_start=336
-  _globals['_ITEMSERVICE']._serialized_end=589
+  _globals['_ITEMINPUT']._serialized_start=103
+  _globals['_ITEMINPUT']._serialized_end=177
+  _globals['_GETITEMSREQUEST']._serialized_start=179
+  _globals['_GETITEMSREQUEST']._serialized_end=214
+  _globals['_GETITEMSRESPONSE']._serialized_start=216
+  _globals['_GETITEMSRESPONSE']._serialized_end=261
+  _globals['_ADDITEMSREQUEST']._serialized_start=263
+  _globals['_ADDITEMSREQUEST']._serialized_end=312
+  _globals['_ADDITEMSRESPONSE']._serialized_start=314
+  _globals['_ADDITEMSRESPONSE']._serialized_end=359
+  _globals['_CLEARITEMSREQUEST']._serialized_start=361
+  _globals['_CLEARITEMSREQUEST']._serialized_end=380
+  _globals['_CLEARITEMSRESPONSE']._serialized_start=382
+  _globals['_CLEARITEMSRESPONSE']._serialized_end=402
+  _globals['_ITEMSERVICE']._serialized_start=405
+  _globals['_ITEMSERVICE']._serialized_end=607
 # @@protoc_insertion_point(module_scope)

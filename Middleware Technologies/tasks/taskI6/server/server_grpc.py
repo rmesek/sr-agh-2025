@@ -11,61 +11,52 @@ item_id_counter = 0
 
 
 class ItemService(item_pb2_grpc.ItemServiceServicer):
-    def GetItemList(
+    def GetItems(
             self,
-            request: item_pb2.GetItemListRequest,
+            request: item_pb2.GetItemsRequest,
             context: grpc.ServicerContext,
-    ) -> item_pb2.GetItemListResponse:
+    ) -> item_pb2.GetItemsResponse:
         global items_db, item_id_counter
 
-        logging.info("gRPC: GetItemList called")
+        logging.info("gRPC: GetItems called")
+        if request.item_ids:
+            items = [item for item in items_db.values() if item.id in request.item_ids]
+            return item_pb2.GetItemsResponse(items=items)
         items = list(items_db.values())
-        return item_pb2.GetItemListResponse(items=items)
+        return item_pb2.GetItemsResponse(items=items)
 
-    def GetItem(
+    def AddItems(
             self,
-            request: item_pb2.GetItemRequest,
+            request: item_pb2.AddItemsRequest,
             context: grpc.ServicerContext,
-    ) -> item_pb2.Item:
+    ) -> item_pb2.AddItemsResponse:
         global items_db, item_id_counter
 
-        logging.info(f"gRPC: GetItem called with id {request.id}")
-        item = items_db.get(request.id)
-        if item is None:
-            context.set_code(grpc.StatusCode.NOT_FOUND)
-            context.set_details(f"Item with id {request.id} not found")
-            return item_pb2.Item()
-        return item
+        logging.info("gRPC: AddItems called")
+        added_items: list[item_pb2.Item] = []
+        for item_input in request.items:
+            item_id_counter += 1
+            item = item_pb2.Item(
+                id=item_id_counter,
+                name=item_input.name,
+                value=item_input.value,
+                details=item_input.details
+            )
+            items_db[item.id] = item
+            added_items.append(item)
+        return item_pb2.AddItemsResponse(items=added_items)
 
-    def AddItem(
+    def ClearItems(
             self,
-            request: item_pb2.AddItemRequest,
+            request: item_pb2.ClearItemsRequest,
             context: grpc.ServicerContext,
-    ) -> item_pb2.Item:
-        global items_db, item_id_counter
-
-        logging.info(f"gRPC: AddItem called with name {request.name}")
-        item_id_counter += 1
-        item = item_pb2.Item(
-            id=item_id_counter,
-            name=request.name,
-            value=request.value,
-            details=request.details
-        )
-        items_db[item.id] = item
-        return item
-
-    def ClearItemList(
-            self,
-            request: item_pb2.ClearItemListRequest,
-            context: grpc.ServicerContext,
-    ) -> item_pb2.ClearItemListResponse:
+    ) -> item_pb2.ClearItemsResponse:
         global items_db, item_id_counter
 
         logging.info("gRPC: ClearItemList called")
         items_db.clear()
         item_id_counter = 0
-        return item_pb2.ClearItemListResponse()
+        return item_pb2.ClearItemsResponse()
 
 
 def serve(server_address: str):

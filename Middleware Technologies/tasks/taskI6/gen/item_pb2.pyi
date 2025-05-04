@@ -17,23 +17,7 @@ class Item(_message.Message):
     details: str
     def __init__(self, id: _Optional[int] = ..., name: _Optional[str] = ..., value: _Optional[float] = ..., details: _Optional[str] = ...) -> None: ...
 
-class GetItemListRequest(_message.Message):
-    __slots__ = ()
-    def __init__(self) -> None: ...
-
-class GetItemListResponse(_message.Message):
-    __slots__ = ("items",)
-    ITEMS_FIELD_NUMBER: _ClassVar[int]
-    items: _containers.RepeatedCompositeFieldContainer[Item]
-    def __init__(self, items: _Optional[_Iterable[_Union[Item, _Mapping]]] = ...) -> None: ...
-
-class GetItemRequest(_message.Message):
-    __slots__ = ("id",)
-    ID_FIELD_NUMBER: _ClassVar[int]
-    id: int
-    def __init__(self, id: _Optional[int] = ...) -> None: ...
-
-class AddItemRequest(_message.Message):
+class ItemInput(_message.Message):
     __slots__ = ("name", "value", "details")
     NAME_FIELD_NUMBER: _ClassVar[int]
     VALUE_FIELD_NUMBER: _ClassVar[int]
@@ -43,10 +27,34 @@ class AddItemRequest(_message.Message):
     details: str
     def __init__(self, name: _Optional[str] = ..., value: _Optional[float] = ..., details: _Optional[str] = ...) -> None: ...
 
-class ClearItemListRequest(_message.Message):
+class GetItemsRequest(_message.Message):
+    __slots__ = ("item_ids",)
+    ITEM_IDS_FIELD_NUMBER: _ClassVar[int]
+    item_ids: _containers.RepeatedScalarFieldContainer[int]
+    def __init__(self, item_ids: _Optional[_Iterable[int]] = ...) -> None: ...
+
+class GetItemsResponse(_message.Message):
+    __slots__ = ("items",)
+    ITEMS_FIELD_NUMBER: _ClassVar[int]
+    items: _containers.RepeatedCompositeFieldContainer[Item]
+    def __init__(self, items: _Optional[_Iterable[_Union[Item, _Mapping]]] = ...) -> None: ...
+
+class AddItemsRequest(_message.Message):
+    __slots__ = ("items",)
+    ITEMS_FIELD_NUMBER: _ClassVar[int]
+    items: _containers.RepeatedCompositeFieldContainer[ItemInput]
+    def __init__(self, items: _Optional[_Iterable[_Union[ItemInput, _Mapping]]] = ...) -> None: ...
+
+class AddItemsResponse(_message.Message):
+    __slots__ = ("items",)
+    ITEMS_FIELD_NUMBER: _ClassVar[int]
+    items: _containers.RepeatedCompositeFieldContainer[Item]
+    def __init__(self, items: _Optional[_Iterable[_Union[Item, _Mapping]]] = ...) -> None: ...
+
+class ClearItemsRequest(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...
 
-class ClearItemListResponse(_message.Message):
+class ClearItemsResponse(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...
