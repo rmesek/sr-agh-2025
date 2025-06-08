@@ -1,0 +1,21 @@
+Stworzyć aplikację w środowisku Zookeeper (Java, …) która wykorzystując mechanizm obserwatorów (watches) umożliwia następujące funkcjonalności:
+– Jeśli tworzony jest znode o nazwie „a” uruchamiana jest zewnętrzna aplikacja graficzna (dowolna, określona w linii poleceń),
+– Jeśli jest kasowany „a” aplikacja zewnętrzna jest zatrzymywana,
+– Każde dodanie potomka do „a” powoduje wyświetlenie graficznej informacji na ekranie o aktualnej ilości potomków.
+- Dodatkowo aplikacja powinna mieć możliwość wyświetlenia całej struktury drzewa „a”.
+- Stworzona aplikacja powinna działać w środowisku „Replicated ZooKeeper”.
+
+
+cd C:\Users\robert\Desktop\Systemy rozproszone\sr-agh-2025\Distributed Coordination Services\apache-zookeeper-3.8.4\bin
+
+zkServer2.cmd \zoo1.cfg
+zkServer2.cmd \zoo2.cfg
+zkServer2.cmd \zoo3.cfg
+
+zkCli.cmd
+    create /a "data"
+    create /a/c1 "child1"
+    create /a/c2 "child2"
+    delete /a/c1
+    delete /a/c2
+    delete /a
