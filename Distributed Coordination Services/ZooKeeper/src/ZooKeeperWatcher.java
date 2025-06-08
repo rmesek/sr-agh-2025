@@ -5,7 +5,6 @@ import javax.swing.JOptionPane;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 
 public class ZooKeeperWatcher implements Watcher {
@@ -136,7 +135,7 @@ public class ZooKeeperWatcher implements Watcher {
         Runtime.getRuntime().addShutdownHook(new Thread(watcher::close));
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Press 't' to display tree structure, 'q' to quit");
+        System.out.println("Press 't' to display tree, 'q' to quit");
 
         while (true) {
             String input = scanner.nextLine().trim().toLowerCase();
